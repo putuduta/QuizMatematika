@@ -16,8 +16,8 @@ public class MainActivity extends AppCompatActivity {
     //Initialisasi
     private TextView tvTitle;
     private EditText etUsername;
-    private EditText etPassword;
-    private Button btnLogin;
+    private Button btnLogin, btnView;
+    public static final String EXTRA_OBJECT_USER = "extra_object_user";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
         tvTitle = findViewById(R.id.tv_title);
         etUsername = findViewById(R.id.et_username);
-        etPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
+        btnView = findViewById(R.id.btn_view_score);
 
-        tvTitle.setText("Training Android");
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,19 +41,28 @@ public class MainActivity extends AppCompatActivity {
                     // Dalam bentuk OBJECT
                     User user = new User();
                     user.setUsername(etUsername.getText().toString());
-                    user.setPassword(etPassword.getText().toString());
-                    intent.putExtra(HomeActivity.EXTRA_OBJECT_USER, user);
+                    intent.putExtra(HomeActivity.EXTRA_OBJECT_USER_HOME, user);
                     startActivity(intent);
 //                    finish();
                 } else {
-                    Toast.makeText(MainActivity.this, "All field must not be empt!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Please input your name", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ViewScoreActivity.class);
+                User newuser = (User) getIntent().getSerializableExtra(EXTRA_OBJECT_USER);
+                intent.putExtra(ViewScoreActivity.EXTRA_OBJECT_USER_VIEWSCORE, newuser);
+                startActivity(intent);
             }
         });
     }
 
     private boolean validateField() {
-        if (etUsername.getText().toString().equals("") && etPassword.getText().toString().equals("")) {
+        if (etUsername.getText().toString().equals("")) {
             return false;
         } else {
             return true;
